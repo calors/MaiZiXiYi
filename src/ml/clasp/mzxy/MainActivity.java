@@ -3,6 +3,10 @@ package ml.clasp.mzxy;
 import java.util.ArrayList;
 import java.util.List;
 
+import ml.clasp.fragment.myfragment1;
+import ml.clasp.fragment.myfragment2;
+import ml.clasp.fragment.myfragment3;
+import ml.clasp.fragment.myfragment4;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
