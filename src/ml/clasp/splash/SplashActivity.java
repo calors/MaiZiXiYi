@@ -3,11 +3,14 @@ package ml.clasp.splash;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.xml.datatype.Duration;
+
+import ml.clasp.mzxy.MainActivity;
 import ml.clasp.mzxy.R;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
-import android.provider.Telephony.Sms;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
@@ -15,39 +18,46 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
 
 public class SplashActivity extends Activity
 {
 	private ViewPager mPager;
 	private List<View> mSplashViewList;
-	private Context mContext;
-	private static final String TAG = "SplashActivity";
+	private static final String TAG = "genolog";
+	private int mCurrentPage;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_splash);
-		mContext = this;
 		initView();
 		mPager.addOnPageChangeListener(new OnPageChangeListener()
 		{
 			@Override
 			public void onPageSelected(int pArg0)
 			{
-				Log.i(TAG, "page" + pArg0);
+				Log.i(TAG, "selected=" + pArg0);
+				mCurrentPage = pArg0;
 			}
 
 			@Override
 			public void onPageScrolled(int pArg0, float pArg1, int pArg2)
 			{
-				// TODO Auto-generated method stub
 			}
 
 			@Override
 			public void onPageScrollStateChanged(int pArg0)
 			{
-				// TODO Auto-generated method stub
+				Log.i(TAG, "Scrollstatechange=" + pArg0);
+				if (mCurrentPage==2&&pArg0==0)
+				{
+					Intent _intent=new Intent(SplashActivity.this,MainActivity.class);
+					startActivity(_intent);
+				}
 			}
 		});
 	}
@@ -55,6 +65,9 @@ public class SplashActivity extends Activity
 	private void initView()
 	{
 		mPager = (ViewPager) findViewById(R.id.splashVP);
+		Animation _animation = new AlphaAnimation(0.0f, 1.0f);
+		_animation.setDuration(3000);
+		mPager.setAnimation(_animation);
 		LayoutInflater _inflater = getLayoutInflater();
 		mSplashViewList = new ArrayList<View>();
 		// 加载每一个Splash的view
@@ -70,6 +83,7 @@ public class SplashActivity extends Activity
 			@Override
 			public Object instantiateItem(ViewGroup pContainer, int pPosition)
 			{
+				Log.i(TAG, "instant=" + pPosition);
 				pContainer.addView(mSplashViewList.get(pPosition));
 				return mSplashViewList.get(pPosition);
 			}
@@ -77,7 +91,6 @@ public class SplashActivity extends Activity
 			@Override
 			public boolean isViewFromObject(View pArg0, Object pArg1)
 			{
-				// TODO Auto-generated method stub
 				return pArg0 == pArg1;
 			}
 
@@ -85,6 +98,13 @@ public class SplashActivity extends Activity
 			public int getCount()
 			{
 				return mSplashViewList.size();
+			}
+
+			@Override
+			public void destroyItem(ViewGroup container, int position,
+					Object object)
+			{
+				container.removeView(mSplashViewList.get(position));
 			}
 		});
 	}
